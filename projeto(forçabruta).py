@@ -1,7 +1,9 @@
+#Algoritmo - Força bruta
+
 import time
 import matplotlib.pyplot as plt
 
-#Definindo da função permutar
+#Definindo da função permutar (função núcleo do problema)
 def permutar(pontos_de_entrega):
     #Caso base:
     if len(pontos_de_entrega) <= 1:
@@ -17,33 +19,25 @@ def permutar(pontos_de_entrega):
             permutacoes.append([ponto_atual] + permutacao)
     return permutacoes
 
-#Definindo a função distância de dois pontos
-def distancia(p1,p2):
+#Definindo a função de distância dos pontos
+def dist_pontos(p1,p2):
     dist = abs(p1[0]-p2[0]) + abs(p1[1]-p2[1])
     return dist
 
-#Função para a distância total
+#Função para calcular a distância total
 def dist_percurso(percurso):
     d = 0
     for i in range(1,len(percurso)):
-        d += distancia(percurso[i-1],percurso[i])
+        d += dist_pontos(percurso[i-1],percurso[i])
     return d
 
-#Entradas dos valores
-num_entradas = int(input("Digite o número de entradas: "))
-entradas = ['R'] + list('ABCDEFGHIJKLMNOPQSTUVWXYZ')[:num_entradas-1]
-p = []
-for entrada in entradas:
-    entrada_coordenadas = input(f"Digite as coordenadas para a entrada {entrada} no formato x,y: ")
-    coordenadas = entrada_coordenadas.split(",")
-    x = int(coordenadas[0])
-    y = int(coordenadas[1])
-    p.append((x, y))
+#Definindo variáveis
+p = [(3,0),(1,1),(3,2),(0,4),(2,4)]    #Lista com coordenadas
+entradas=['R','A','B','C','D']         #letras respectivas das coordenadas
+lista_tempos = []                      #Lista para armazenar os tempos de execução dos pontos
+num_entradas = len(entradas)           #Lista para armazenar o número total de entradas
 
-#Lista para armazenar os tempos de execução dos pontos
-lista_tempos = []
-
-#Laço para saber os tempos de execução
+#Laço principal que itera sobre as permutações dos pontos de entrega e para cada permutação calcula a distância total do percurso.
 for i in range(1, num_entradas+1):
     tic = time.process_time_ns()
     menor = float("inf")
@@ -59,16 +53,15 @@ for i in range(1, num_entradas+1):
     toc = time.process_time_ns()
     lista_tempos.append(toc - tic)
 
-# Criação do dicionário para mapear as coordenadas para as entradas
+# Criação do dicionário para mapear as coordenadas para as entradas (estabelecendo uma troca de coordenada para letra)
 coordenadas_para_entradas = {}
 for i in range(len(entradas)):
     entrada = entradas[i]
     coordenada = p[i]
     coordenadas_para_entradas[coordenada] = entrada
 
-# Imprime apenas as menores rotas para o número total de entradas escolhido pelo usuário
+# Imprime todas as menores rotas possíveis para o número total de entradas escolhido pelo usuário
 for percurso in menores_percursos:
-    # Alteração para exibir os entradas em vez das coordenadas usando o dicionário
     percurso_entradas = [coordenadas_para_entradas[coordenada] for coordenada in percurso]
     print(f"Um dos menores percursos para {num_entradas} entradas foi {percurso_entradas} com a distancia de {menor} dronômetros")
 
